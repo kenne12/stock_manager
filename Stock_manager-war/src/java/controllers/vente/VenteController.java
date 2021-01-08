@@ -13,6 +13,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -302,7 +303,7 @@ public class VenteController extends AbstractVenteController implements Serializ
                         this.produitFacadeLocal.edit(p);
 
                         Lot lotTemp = this.lotFacadeLocal.find(c.getIdlot().getIdlot());
-                        double quantite_avant = lotTemp.getQuantite();
+                        double quantiteAvant = lotTemp.getQuantite();
                         lotTemp.setQuantite((lotTemp.getQuantite() - c.getQuantite()));
                         this.lotFacadeLocal.edit(lotTemp);
 
@@ -314,7 +315,7 @@ public class VenteController extends AbstractVenteController implements Serializ
                         lmvts.setFournisseur(" ");
                         lmvts.setQuantiteEntree((0.0D));
                         lmvts.setQuantiteSortie(c.getQuantite());
-                        lmvts.setQuantiteAvant(quantite_avant);
+                        lmvts.setQuantiteAvant(quantiteAvant);
                         lmvts.setReste(lotTemp.getQuantite());
                         lmvts.setType("SORTIE");
                         this.ligneMvtStockFacadeLocal.create(lmvts);
@@ -360,33 +361,22 @@ public class VenteController extends AbstractVenteController implements Serializ
                     for (Commande c : this.commandes) {
                         if (c.getIdcommande() != 0L) {
                             Commande cc = this.commandeFacadeLocal.find(c.getIdcommande());
-                            if (c.getQuantite() != cc.getQuantite()) {
+                            if (!Objects.equals(c.getQuantite(), cc.getQuantite())) {
+
+                                LigneMvtStock ligneMvtStock = ligneMvtStockFacadeLocal.findByMvtIdLot(facture.getIdMvtStock().longValue(), c.getIdlot().getIdlot());
+
                                 Produit pro = this.produitFacadeLocal.find(c.getIdproduit().getIdproduit());
-                                pro.setQuantite((pro.getQuantite() + cc.getQuantite() - c.getQuantite()));
+                                pro.setQuantite(pro.getQuantite() + (cc.getQuantite() - c.getQuantite()));
                                 this.produitFacadeLocal.edit(pro);
 
                                 Lot lot = this.lotFacadeLocal.find(c.getIdlot().getIdlot());
-                                lot.setQuantite((lot.getQuantite() + cc.getQuantite() - c.getQuantite()));
+                                lot.setQuantite(lot.getQuantite() + (cc.getQuantite() - c.getQuantite()));
                                 this.lotFacadeLocal.edit(lot);
 
-                                LigneMvtStock ligneMvtStock = new LigneMvtStock();
-                                ligneMvtStock.setIdLigneMvtStock(this.ligneMvtStockFacadeLocal.nextLongVal());
-                                ligneMvtStock.setIdMvtStock(this.mvtStock);
-                                ligneMvtStock.setIdlot(c.getIdlot());
-                                ligneMvtStock.setClient(this.client.getNom());
-                                ligneMvtStock.setFournisseur(" ");
-                                if (c.getQuantite() > cc.getQuantite()) {
-                                    ligneMvtStock.setQuantiteEntree((0.0D));
-                                    ligneMvtStock.setQuantiteSortie((c.getQuantite() - cc.getQuantite()));
-                                    ligneMvtStock.setReste(lot.getQuantite());
-                                    ligneMvtStock.setType("SORTIE");
-                                } else {
-                                    ligneMvtStock.setQuantiteEntree((cc.getQuantite() - c.getQuantite()));
-                                    ligneMvtStock.setQuantiteSortie((0.0D));
-                                    ligneMvtStock.setReste(lot.getQuantite());
-                                    ligneMvtStock.setType("ENTREE");
-                                }
-                                this.ligneMvtStockFacadeLocal.create(ligneMvtStock);
+                                ligneMvtStock.setQuantiteSortie(c.getQuantite());
+                                ligneMvtStock.setReste(ligneMvtStock.getQuantiteAvant() - c.getQuantite());
+
+                                this.ligneMvtStockFacadeLocal.edit(ligneMvtStock);
                             }
                             this.commandeFacadeLocal.edit(c);
                             continue;
@@ -394,11 +384,13 @@ public class VenteController extends AbstractVenteController implements Serializ
                         c.setIdcommande(this.commandeFacadeLocal.nextVal());
                         c.setIdfacture(this.facture);
                         this.commandeFacadeLocal.create(c);
+
                         c.setIdproduit(this.produitFacadeLocal.find(c.getIdproduit().getIdproduit()));
                         c.getIdproduit().setQuantite((c.getIdproduit().getQuantite() - c.getQuantite()));
                         this.produitFacadeLocal.edit(c.getIdproduit());
 
                         Lot l = this.lotFacadeLocal.find(c.getIdlot().getIdlot());
+                        double qteAvant = l.getQuantite();
                         l.setQuantite((l.getQuantite() - c.getQuantite()));
                         this.lotFacadeLocal.edit(l);
 
@@ -408,7 +400,8 @@ public class VenteController extends AbstractVenteController implements Serializ
                         lmvts.setIdlot(c.getIdlot());
                         lmvts.setClient(this.client.getNom());
                         lmvts.setFournisseur(" ");
-                        lmvts.setQuantiteEntree((0.0D));
+                        lmvts.setQuantiteAvant(qteAvant);
+                        lmvts.setQuantiteEntree(0.0D);
                         lmvts.setQuantiteSortie(c.getQuantite());
                         lmvts.setReste(c.getIdlot().getQuantite());
                         lmvts.setType("SORTIE");
@@ -417,15 +410,15 @@ public class VenteController extends AbstractVenteController implements Serializ
                 }
 
                 this.ut.commit();
+                this.sommeQuantite();
                 this.facture = null;
-                this.supprimer = this.modifier = this.imprimer = (true);
+                this.supprimer = this.modifier = this.imprimer = true;
 
                 notifySuccess();
                 RequestContext.getCurrentInstance().execute("PF('CommandeCreateDialog').hide()");
             } else {
                 notifyError("not_row_selected");
             }
-
         } catch (Exception e) {
             notifyFail(e);
         }
@@ -603,6 +596,11 @@ public class VenteController extends AbstractVenteController implements Serializ
                 Lot l = this.lotFacadeLocal.find(c1.getIdlot().getIdlot());
                 l.setQuantite((l.getQuantite() + c1.getQuantite()));
                 this.lotFacadeLocal.edit(l);
+
+                LigneMvtStock lmvt = ligneMvtStockFacadeLocal.findByMvtIdLot(facture.getIdMvtStock().longValue(), l.getIdlot());
+                if (lmvt != null) {
+                    ligneMvtStockFacadeLocal.remove(lmvt);
+                }
             }
             this.commandes.remove(index);
 
@@ -657,8 +655,7 @@ public class VenteController extends AbstractVenteController implements Serializ
     public void updateTotaux() {
         try {
             this.cout_quantite = 0.0D;
-            if (this.commande.getQuantite() != null
-                    && this.commande.getMontant() != null) {
+            if (this.commande.getQuantite() != null && this.commande.getMontant() != null) {
                 this.cout_quantite = (this.commande.getMontant() * this.commande.getQuantite());
             }
         } catch (Exception e) {

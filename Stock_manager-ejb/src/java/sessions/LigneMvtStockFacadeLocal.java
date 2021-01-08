@@ -26,6 +26,8 @@ public interface LigneMvtStockFacadeLocal {
 
     List<LigneMvtStock> findByMvt(Long idMvt) throws Exception;
 
+    LigneMvtStock findByMvtIdLot(Long idMvt, Long idLot) throws Exception;
+
     List<LigneMvtStock> findByIntervale(Date date_debut, Date date_fin) throws Exception;
 
     List<LigneMvtStock> findByDate(Date date) throws Exception;

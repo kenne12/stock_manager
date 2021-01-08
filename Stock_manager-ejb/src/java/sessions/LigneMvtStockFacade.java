@@ -43,6 +43,17 @@ public class LigneMvtStockFacade extends AbstractFacade<LigneMvtStock> implement
     }
 
     @Override
+    public LigneMvtStock findByMvtIdLot(Long idMvt, Long idLot) throws Exception {
+        Query query = this.em.createQuery("SELECT l FROM LigneMvtStock l WHERE l.idMvtStock.idMvtStock=:idmvt AND l.idlot.idlot=:idLot");
+        query.setParameter("idmvt", idMvt).setParameter("idLot", idLot);
+        List list = query.getResultList();
+        if (!list.isEmpty()) {
+            return (LigneMvtStock) list.get(0);
+        }
+        return null;
+    }
+
+    @Override
     public List<LigneMvtStock> findByIntervale(Date date_debut, Date date_fin) throws Exception {
         Query query = this.em.createQuery("SELECT l FROM LigneMvtStock l WHERE l.idMvtStock.dateMvt BETWEEN :date_debut AND :date_fin ORDER BY l.idLigneMvtStock");
         query.setParameter("date_debut", date_debut).setParameter("date_fin", date_fin);
