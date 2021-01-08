@@ -109,7 +109,9 @@
                 <h:outputLabel style="font-size: 20px" value="#{stockController.quantiteEntrant}" />
 
                 <h:outputLabel style="font-size: 20px" value="Montant total : &nbsp;"/>
-                <h:outputLabel style="font-size: 20px" value="#{stockController.montantJour}" />
+                <h:outputLabel style="font-size: 20px" value="#{stockController.montantJour}" >
+                    <f:convertNumber />
+                </h:outputLabel>
             </h:panelGrid>
 
         </p:panel>
