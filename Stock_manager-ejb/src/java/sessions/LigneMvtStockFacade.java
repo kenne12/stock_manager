@@ -73,4 +73,12 @@ public class LigneMvtStockFacade extends AbstractFacade<LigneMvtStock> implement
         query.setParameter("date_debut", date_debut).setParameter("date_fin", date_fin).setParameter("idProduit", idArticle);
         return query.getResultList();
     }
+
+    @Override
+    public void deleteByIdMvtStock(long idMtStock) {
+        Query query = em.createQuery("DELETE  FROM LigneMvtStock l WHERE l.idMvtStock.idMvtStock=:idMtStock");
+        query.setParameter("idMtStock", idMtStock);
+        query.executeUpdate();
+
+    }
 }

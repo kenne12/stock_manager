@@ -3,6 +3,7 @@
 /Stock_manager-war/lib
 /Stock_manager-war/build
 /Stock_manager-war/dist
+/Stock_manager-ejb/build
 
 # Compiled class file
 *.class

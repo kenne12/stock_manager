@@ -322,8 +322,8 @@ public class VenteController extends AbstractVenteController implements Serializ
                     }
 
                     Utilitaires.saveOperation(this.mouchardFacadeLocal, "Enregistrement de la facture  : " + code + " ; Montant " + this.facture.getMontant(), SessionMBean.getUserAccount());
-                    this.factures = this.factureFacadeLocal.findAllDate(SessionMBean.getDateOuverture());
                     this.ut.commit();
+                    this.factures = this.factureFacadeLocal.findAllDate(SessionMBean.getDateOuverture());
 
                     this.sommeQuantite();
 
@@ -336,7 +336,6 @@ public class VenteController extends AbstractVenteController implements Serializ
                 } else {
                     notifyError("liste_article_vide");
                 }
-
             } else if (this.facture != null) {
 
                 if (this.facture.getCredit()) {
@@ -449,7 +448,7 @@ public class VenteController extends AbstractVenteController implements Serializ
                         return;
                     }
 
-                    //ut.begin();
+                    ut.begin();
                     List<Commande> temp = this.commandeFacadeLocal.findByFacture(this.facture);
                     if (!temp.isEmpty()) {
                         for (Commande c : temp) {
@@ -467,12 +466,9 @@ public class VenteController extends AbstractVenteController implements Serializ
                     this.factureFacadeLocal.remove(this.facture);
                     MvtStock mTemp = this.mvtStockFacadeLocal.find((this.facture.getIdMvtStock().longValue()));
 
-                    List<LigneMvtStock> lmvt = this.ligneMvtStockFacadeLocal.findByMvt(mTemp.getIdMvtStock());
-                    for (LigneMvtStock l : lmvt) {
-                        this.ligneMvtStockFacadeLocal.remove(l);
-                    }
+                    ligneMvtStockFacadeLocal.deleteByIdMvtStock(mTemp.getIdMvtStock());
                     this.mvtStockFacadeLocal.remove(mTemp);
-                    //this.ut.commit();
+                    this.ut.commit();
 
                     Utilitaires.saveOperation(this.mouchardFacadeLocal, "Annulation de la vente : " + this.facture.getNumeroFacture() + " Montant : " + this.facture.getMontant() + " Client : " + this.facture.getIdclient().getNom(), SessionMBean.getUserAccount());
                     this.facture = null;
@@ -580,35 +576,36 @@ public class VenteController extends AbstractVenteController implements Serializ
 
     public void removeProduit(int index) {
         try {
-            boolean trouve = false;
-            this.ut.begin();
-
             Commande c1 = this.commandes.get(index);
             if (c1.getIdcommande() != 0L) {
-                trouve = true;
+
                 this.commandeFacadeLocal.remove(c1);
                 Utilitaires.saveOperation(this.mouchardFacadeLocal, "Suppression de l'article : " + c1.getIdproduit().getNom() + " quantité : " + c1.getQuantite() + " dans la facture : " + this.facture.getNumeroFacture(), SessionMBean.getUserAccount());
+                ut.begin();
 
+                Commande cOld = commandeFacadeLocal.find(c1.getIdcommande());
                 Produit pro = this.produitFacadeLocal.find(c1.getIdproduit().getIdproduit());
-                pro.setQuantite((pro.getQuantite() + c1.getQuantite()));
+                pro.setQuantite((pro.getQuantite() + cOld.getQuantite()));
                 this.produitFacadeLocal.edit(pro);
 
                 Lot l = this.lotFacadeLocal.find(c1.getIdlot().getIdlot());
-                l.setQuantite((l.getQuantite() + c1.getQuantite()));
+                l.setQuantite((l.getQuantite() + cOld.getQuantite()));
                 this.lotFacadeLocal.edit(l);
 
                 LigneMvtStock lmvt = ligneMvtStockFacadeLocal.findByMvtIdLot(facture.getIdMvtStock().longValue(), l.getIdlot());
                 if (lmvt != null) {
                     ligneMvtStockFacadeLocal.remove(lmvt);
                 }
+
+                Facture fOld = factureFacadeLocal.find(facture.getIdfacture());
+                fOld.setMontant(fOld.getMontant() - (cOld.getQuantite() * cOld.getMontant()));
+                this.factureFacadeLocal.edit(fOld);
+                ut.commit();
             }
             this.commandes.remove(index);
 
             updateTotal();
-            if (trouve) {
-                this.factureFacadeLocal.edit(this.facture);
-            }
-            this.ut.commit();
+
             JsfUtil.addSuccessMessage("Supprimé");
         } catch (Exception e) {
             e.printStackTrace();
@@ -617,13 +614,13 @@ public class VenteController extends AbstractVenteController implements Serializ
     }
 
     public Double calculTotal(List<Commande> commandes) {
-        Double resultat = (0.0D);
+        Double resultat = 0.0D;
         int i = 0;
         for (Commande c : commandes) {
-            resultat = (resultat + c.getMontant() * c.getQuantite());
+            resultat += (c.getMontant() * c.getQuantite());
             commandes.get(i).setBenefice(((commandes.get(i).getMontant() - commandes.get(i).getIdlot().getPrixAchat()) * commandes.get(i).getQuantite()));
-            if (((Commande) commandes.get(i)).getBenefice() < 0.0D) {
-                ((Commande) commandes.get(i)).setBenefice((0.0D));
+            if (((Commande) commandes.get(i)).getBenefice() < 0d) {
+                ((Commande) commandes.get(i)).setBenefice((0d));
             }
             i++;
         }
@@ -636,13 +633,13 @@ public class VenteController extends AbstractVenteController implements Serializ
             this.facture.setMontant(this.total);
 
             if (this.facture.getCalculRemise()) {
-                this.facture.setMontantRemise((this.total * this.facture.getTauxRemise() / 100.0D));
+                this.facture.setMontantRemise((this.total * this.facture.getTauxRemise() / 100d));
             } else {
                 this.facture.setMontantRemise((0.0D));
             }
 
             if (this.facture.getCalcultva()) {
-                this.facture.setMontantTva(((this.total - this.facture.getMontantRemise()) * this.facture.getTauxTva() / 100.0D));
+                this.facture.setMontantTva(((this.total - this.facture.getMontantRemise()) * this.facture.getTauxTva() / 100d));
             } else {
                 this.facture.setMontantTva((0.0D));
             }
@@ -672,7 +669,7 @@ public class VenteController extends AbstractVenteController implements Serializ
 
                 this.lots = this.lotFacadeLocal.findByArticle(this.produit.getIdproduit(), this.produit.getPerissable(), new Date());
 
-                if (this.lots.size() == 0) {
+                if (Objects.equals(this.lots.size(), 0)) {
                     this.lot = null;
                     return;
                 }

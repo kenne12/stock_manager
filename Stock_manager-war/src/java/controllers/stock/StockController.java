@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -23,7 +24,7 @@ import utils.Utilitaires;
 @ManagedBean
 @ViewScoped
 public class StockController extends AbstractStockController implements Serializable {
-    
+
     @PostConstruct
     private void init() {
         try {
@@ -33,7 +34,7 @@ public class StockController extends AbstractStockController implements Serializ
         }
         this.sommeQuantite();
     }
-    
+
     public void updateMois() {
         try {
             this.anneeMois = this.anneeMoisFacadeLocal.find(this.anneeMois.getIdAnneeMois());
@@ -41,7 +42,7 @@ public class StockController extends AbstractStockController implements Serializ
             e.printStackTrace();
         }
     }
-    
+
     private void sommeQuantite() {
         quantiteEntrant = 0;
         montantJour = 0;
@@ -51,20 +52,20 @@ public class StockController extends AbstractStockController implements Serializ
                 if (s.getStockProduitList().isEmpty()) {
                     s.setStockProduitList(stockProduitFacadeLocal.findByStock(s));
                 }
-                
+
                 for (StockProduit sp : s.getStockProduitList()) {
                     quantiteEntrant += sp.getQuantite();
                 }
-                
+
             }
         }
     }
-    
+
     public void prepareCreate() {
         try {
             if (Utilitaires.isDayClosed()) {
                 notifyError("journee_cloturee");
-                
+
                 return;
             }
             if (!Utilitaires.isAccess((19L))) {
@@ -72,7 +73,7 @@ public class StockController extends AbstractStockController implements Serializ
                 return;
             }
             this.mode = "Create";
-            
+
             this.produit = null;
             this.stock = new Stock();
             this.stock.setDateAchat(SessionMBean.getDateOuverture());
@@ -82,7 +83,7 @@ public class StockController extends AbstractStockController implements Serializ
             notifyFail(e);
         }
     }
-    
+
     public void prepareCreateCommande() {
         this.famille = new Famille();
         this.produit = new Produit();
@@ -91,7 +92,7 @@ public class StockController extends AbstractStockController implements Serializ
         this.cout_quantite = (0.0D);
         this.produits = this.produitFacadeLocal.findAllRange();
     }
-    
+
     public void prepareEdit() {
         try {
             if (!this.stock.getLivraisonDirecte()) {
@@ -109,10 +110,10 @@ public class StockController extends AbstractStockController implements Serializ
             this.mode = "Edit";
             if (this.stock != null) {
                 this.stockProduits = this.stockProduitFacadeLocal.findByStock(this.stock);
-                
+
                 this.fournisseur = this.stock.getIdfournisseur();
                 this.anneeMois = this.stock.getIdAnneeMois();
-                
+
                 this.annee = this.anneeMois.getIdannee();
                 this.anneeMoises = this.anneeMoisFacadeLocal.findByAnneeEtat(this.annee, true);
                 this.total = this.stock.getMontant();
@@ -125,7 +126,7 @@ public class StockController extends AbstractStockController implements Serializ
             notifyFail(e);
         }
     }
-    
+
     public void prepareview() {
         try {
             if (this.stock != null) {
@@ -142,7 +143,7 @@ public class StockController extends AbstractStockController implements Serializ
             e.printStackTrace();
         }
     }
-    
+
     public void filterProduit() {
         try {
             this.produits.clear();
@@ -155,7 +156,7 @@ public class StockController extends AbstractStockController implements Serializ
             e.printStackTrace();
         }
     }
-    
+
     public void filterMois() {
         try {
             this.anneeMoises.clear();
@@ -166,7 +167,7 @@ public class StockController extends AbstractStockController implements Serializ
             e.printStackTrace();
         }
     }
-    
+
     private double sommeQ(List<StockProduit> list) {
         if (list.isEmpty()) {
             return 0;
@@ -177,62 +178,62 @@ public class StockController extends AbstractStockController implements Serializ
         }
         return qte;
     }
-    
+
     public void create() {
         try {
             if (this.mode.equals("Create")) {
-                
+
                 if (!this.stockProduits.isEmpty()) {
-                    
+
                     this.mvtStock = new MvtStock();
-                    
+
                     this.fournisseur = this.fournisseurFacadeLocal.find(this.fournisseur.getIdfournisseur());
-                    
+
                     String code = "S-" + this.anneeMois.getIdannee().getNom() + "-" + this.anneeMois.getIdmois().getNom().toUpperCase().substring(0, 3);
                     Long nextPayement = this.stockFacadeLocal.nextVal(this.anneeMois);
                     code = Utilitaires.genererCodeStock(code, nextPayement);
-                    
+
                     String message = "";
                     this.ut.begin();
-                    
+
                     this.stock.setIdstock(this.stockFacadeLocal.nextLongVal());
                     this.mvtStock.setIdMvtStock(this.mvtStockFacadeLocal.nextLongVal());
-                    
+
                     this.stock.setIdfournisseur(this.fournisseur);
                     this.stock.setIdAnneeMois(this.anneeMois);
                     this.stock.setMontant(this.total);
                     this.stock.setLivraisonDirecte((true));
                     this.stock.setCode(code);
                     this.stock.setIdMvtStock(BigInteger.valueOf(this.mvtStock.getIdMvtStock()));
-                    
+
                     this.mvtStock.setCode(code);
                     this.mvtStock.setDateMvt(this.stock.getDateAchat());
                     this.mvtStock.setIdmois(this.stock.getIdAnneeMois());
                     this.mvtStock.setIdstock(BigInteger.valueOf(this.stock.getIdstock()));
-                    
+
                     this.stock.setQuantite(this.sommeQ(stockProduits));
-                    
+
                     this.stockFacadeLocal.create(this.stock);
                     this.mvtStockFacadeLocal.create(this.mvtStock);
-                    
+
                     for (StockProduit s : this.stockProduits) {
                         s.setIdStockProduit(this.stockProduitFacadeLocal.nextVal());
                         s.setIdstock(this.stock);
                         this.stockProduitFacadeLocal.create(s);
-                        
+
                         Produit p = this.produitFacadeLocal.find(s.getIdlot().getIdproduit().getIdproduit());
                         p.setPrixachat(s.getPrixAcquisition());
                         p.setPrixMaximal(s.getPrixAcquisition());
                         p.setQuantite((p.getQuantite() + s.getQuantite()));
                         this.produitFacadeLocal.edit(p);
-                        
+
                         Lot lotTemp = this.lotFacadeLocal.find(s.getIdlot().getIdlot());
                         double quantite_avant = lotTemp.getQuantite();
                         lotTemp.setQuantite(lotTemp.getQuantite() + s.getQuantite());
                         lotTemp.setPrixAchat(s.getPrixAcquisition());
                         lotTemp.setPrixVente(s.getPrixAcquisition());
                         this.lotFacadeLocal.edit(lotTemp);
-                        
+
                         LigneMvtStock lmvts = new LigneMvtStock();
                         lmvts.setIdLigneMvtStock(this.ligneMvtStockFacadeLocal.nextLongVal());
                         lmvts.setIdMvtStock(this.mvtStock);
@@ -246,12 +247,12 @@ public class StockController extends AbstractStockController implements Serializ
                         lmvts.setType("ENTREE");
                         this.ligneMvtStockFacadeLocal.create(lmvts);
                     }
-                    
+
                     Utilitaires.saveOperation(this.mouchardFacadeLocal, "Enregistrement de l'entrée en stock N° : " + code + " ; Montant : " + this.stock.getMontant(), SessionMBean.getUserAccount());
                     this.ut.commit();
-                    
+
                     this.stock = null;
-                    
+
                     notifySuccess();
                     RequestContext.getCurrentInstance().execute("PF('StockCreateDialog').hide()");
                     return;
@@ -260,66 +261,52 @@ public class StockController extends AbstractStockController implements Serializ
                 return;
             }
             if (this.stock != null) {
-                
+
                 Stock s1 = this.stockFacadeLocal.find(this.stock.getIdstock());
-                
+
                 this.fournisseur = this.fournisseurFacadeLocal.find(this.fournisseur.getIdfournisseur());
                 this.stock.setIdfournisseur(this.fournisseur);
                 this.stock.setMontant(this.total);
-                
-                this.ut.begin();
-                
-                this.stockFacadeLocal.edit(this.stock);
+
                 if (!this.stockProduits.isEmpty()) {
-                    
+                    this.ut.begin();
+                    this.stockFacadeLocal.edit(this.stock);
                     for (StockProduit s : this.stockProduits) {
-                        
+
                         if (s.getIdStockProduit() != 0L) {
-                            
                             StockProduit sp = this.stockProduitFacadeLocal.find(s.getIdStockProduit());
-                            if (s.getQuantite() != sp.getQuantite()) {
-                                
+                            if (!Objects.equals(s.getQuantite(), sp.getQuantite())) {
+                                LigneMvtStock ligneMvtStock = ligneMvtStockFacadeLocal.findByMvtIdLot(stock.getIdMvtStock().longValue(), s.getIdlot().getIdlot());
+
                                 Produit pro = this.produitFacadeLocal.find(s.getIdproduit().getIdproduit());
-                                pro.setQuantite((pro.getQuantite() - sp.getQuantite() + s.getQuantite()));
+                                pro.setQuantite((pro.getQuantite() - sp.getQuantite()) + s.getQuantite());
                                 this.produitFacadeLocal.edit(pro);
-                                
-                                Lot lot = this.lotFacadeLocal.find(s.getIdlot().getIdlot());
-                                lot.setQuantite((lot.getQuantite() - sp.getQuantite() + s.getQuantite()));
-                                this.lotFacadeLocal.edit(lot);
-                                
-                                LigneMvtStock ligneMvtStock = new LigneMvtStock();
-                                ligneMvtStock.setIdLigneMvtStock(this.ligneMvtStockFacadeLocal.nextLongVal());
-                                ligneMvtStock.setIdMvtStock(this.mvtStock);
-                                ligneMvtStock.setIdlot(s.getIdlot());
-                                ligneMvtStock.setClient(" ");
-                                if (s.getQuantite() > sp.getQuantite()) {
-                                    ligneMvtStock.setQuantiteEntree((s.getQuantite() - sp.getQuantite()));
-                                    ligneMvtStock.setQuantiteSortie((0.0D));
-                                    ligneMvtStock.setReste(s.getIdlot().getQuantite());
-                                    ligneMvtStock.setType("ENTREE");
-                                } else {
-                                    ligneMvtStock.setQuantiteEntree((0.0D));
-                                    ligneMvtStock.setQuantiteSortie((sp.getQuantite() - s.getQuantite()));
-                                    ligneMvtStock.setReste(s.getIdlot().getQuantite());
-                                    ligneMvtStock.setType("SORTIE");
-                                }
-                                this.ligneMvtStockFacadeLocal.create(ligneMvtStock);
+
+                                Lot lotTemp = this.lotFacadeLocal.find(s.getIdlot().getIdlot());
+                                lotTemp.setQuantite((lotTemp.getQuantite() - sp.getQuantite()) + s.getQuantite());
+                                this.lotFacadeLocal.edit(lotTemp);
+
+                                ligneMvtStock.setQuantiteEntree(s.getQuantite());
+                                ligneMvtStock.setReste(ligneMvtStock.getQuantiteAvant() + s.getQuantite());
+                                this.ligneMvtStockFacadeLocal.edit(ligneMvtStock);
                             }
                             this.stockProduitFacadeLocal.edit(s);
                             continue;
                         }
+
                         s.setIdStockProduit(this.stockProduitFacadeLocal.nextVal());
                         s.setIdstock(this.stock);
                         this.stockProduitFacadeLocal.create(s);
-                        
+
                         Produit p = this.produitFacadeLocal.find(s.getIdproduit().getIdproduit());
                         p.setQuantite((p.getQuantite() + s.getQuantite()));
                         this.produitFacadeLocal.edit(p);
-                        
+
                         Lot l = this.lotFacadeLocal.find(s.getIdlot().getIdlot());
+                        double quantite_avant = l.getQuantite();
                         l.setQuantite((l.getQuantite() + s.getQuantite()));
                         this.lotFacadeLocal.edit(l);
-                        
+
                         LigneMvtStock lmvts = new LigneMvtStock();
                         lmvts.setIdLigneMvtStock(this.ligneMvtStockFacadeLocal.nextLongVal());
                         lmvts.setIdMvtStock(this.mvtStock);
@@ -329,12 +316,13 @@ public class StockController extends AbstractStockController implements Serializ
                         lmvts.setQuantiteEntree(s.getQuantite());
                         lmvts.setQuantiteSortie((0.0D));
                         lmvts.setReste(s.getIdlot().getQuantite());
+                        lmvts.setQuantiteAvant(quantite_avant);
                         lmvts.setType("ENTREE");
                         this.ligneMvtStockFacadeLocal.create(lmvts);
                     }
-                    
+
                     Utilitaires.saveOperation(this.mouchardFacadeLocal, "Enregistrement de l'entrée en stock N° : " + this.stock.getCode() + " ; Ancien Montant : " + s1.getMontant() + " Nouveau montant : " + this.stock.getMontant(), SessionMBean.getUserAccount());
-                    
+
                     this.ut.commit();
                     notifySuccess();
                     RequestContext.getCurrentInstance().execute("PF('StockCreateDialog').hide()");
@@ -348,11 +336,11 @@ public class StockController extends AbstractStockController implements Serializ
             notifyFail(e);
         }
     }
-    
+
     public void delete() {
         try {
             if (this.stock != null) {
-                
+
                 if (Utilitaires.isDayClosed()) {
                     notifyError("journee_cloturee");
                     return;
@@ -361,35 +349,30 @@ public class StockController extends AbstractStockController implements Serializ
                     notifyError("acces_refuse");
                     return;
                 }
-                //this.ut.begin();
+                this.ut.begin();
                 List<StockProduit> temp = this.stockProduitFacadeLocal.findByStock(this.stock);
                 if (temp.isEmpty()) {
-                    System.err.println("not empty");
                     for (StockProduit s : temp) {
                         Produit p = this.produitFacadeLocal.find(s.getIdproduit().getIdproduit());
                         p.setQuantite((p.getQuantite() - s.getQuantite()));
                         this.produitFacadeLocal.edit(p);
-                        
+
                         Lot lTemp = this.lotFacadeLocal.find(s.getIdlot().getIdlot());
                         lTemp.setQuantite((lTemp.getQuantite() - s.getQuantite()));
                         this.lotFacadeLocal.edit(lTemp);
-                        
+
                         this.stockProduitFacadeLocal.remove(s);
                     }
-                    
                 }
-                
+
                 this.stockFacadeLocal.remove(this.stock);
-                
+
                 MvtStock mTemp = this.mvtStockFacadeLocal.find(Long.valueOf(this.stock.getIdMvtStock().longValue()));
-                List<LigneMvtStock> lmvt = this.ligneMvtStockFacadeLocal.findByMvt(mTemp.getIdMvtStock());
-                for (LigneMvtStock l : lmvt) {
-                    this.ligneMvtStockFacadeLocal.remove(l);
-                }
+                ligneMvtStockFacadeLocal.deleteByIdMvtStock(mvtStock.getIdMvtStock());
                 this.mvtStockFacadeLocal.remove(mTemp);
-                
+
                 Utilitaires.saveOperation(this.mouchardFacadeLocal, "Annulation de l'entrée en stock : " + this.stock.getCode() + " Montant : " + this.stock.getMontant(), SessionMBean.getUserAccount());
-                //this.ut.commit();
+                this.ut.commit();
 
                 notifySuccess();
                 try {
@@ -406,7 +389,7 @@ public class StockController extends AbstractStockController implements Serializ
             notifyFail(e);
         }
     }
-    
+
     public void print() {
         try {
             if (!Utilitaires.isAccess((22L))) {
@@ -424,36 +407,36 @@ public class StockController extends AbstractStockController implements Serializ
             notifyFail(e);
         }
     }
-    
+
     public void initPrinter(Stock s) {
         this.stock = s;
         print();
     }
-    
+
     public void initEdit(Stock s) {
         this.stock = s;
         prepareEdit();
     }
-    
+
     public void initView(Stock s) {
         this.stock = s;
         prepareview();
     }
-    
+
     public void initDelete(Stock s) {
-        /* 420 */ this.stock = s;
-        /* 421 */ delete();
+        this.stock = s;
+        delete();
     }
-    
+
     public void addProduit() {
         try {
             StockProduit s = this.stockProduit;
             s.setIdStockProduit((0L));
-            
+
             Lot ltemp = this.lot;
             s.setIdlot(ltemp);
             s.setIdproduit(ltemp.getIdproduit());
-            
+
             boolean drapeau = false;
             for (StockProduit s1 : this.stockProduits) {
                 if (s1.getIdlot().getIdlot().equals(s.getIdlot().getIdlot())) {
@@ -467,7 +450,7 @@ public class StockController extends AbstractStockController implements Serializ
             }
             this.stockProduits.add(s);
             this.total = calculTotal(this.stockProduits);
-            
+
             this.stockProduit = new StockProduit();
             this.produit = new Produit();
             RequestContext.getCurrentInstance().execute("PF('AddarticleCreateDialog').hide()");
@@ -476,25 +459,37 @@ public class StockController extends AbstractStockController implements Serializ
             notifyFail(e);
         }
     }
-    
+
     public void removeProduit(StockProduit stockProduit) {
         try {
             int i = 0;
             for (StockProduit s : this.stockProduits) {
-                
+
                 if (s.getIdproduit().getIdproduit().equals(stockProduit.getIdproduit().getIdproduit())) {
                     if (s.getIdStockProduit() != 0L) {
+
+                        ut.begin();
+                        StockProduit sOld = stockProduitFacadeLocal.find(s.getIdStockProduit());
+                        Stock stockOld = stockFacadeLocal.find(stock.getIdstock());
+
                         this.stockProduitFacadeLocal.remove(s);
-                        this.stock.setMontant((this.stock.getMontant() - this.stock.getMontant() * s.getQuantite()));
-                        this.stockFacadeLocal.edit(this.stock);
-                        
+                        stockOld.setMontant(stockOld.getMontant() - (sOld.getPrixAcquisition() * sOld.getQuantite()));
+                        this.stockFacadeLocal.edit(stockOld);
+
                         Produit pro = this.produitFacadeLocal.find(s.getIdproduit().getIdproduit());
-                        pro.setQuantite((pro.getQuantite() - s.getQuantite()));
+                        pro.setQuantite((pro.getQuantite() - sOld.getQuantite()));
                         this.produitFacadeLocal.edit(pro);
-                        
+
                         Lot lotTemp = this.lotFacadeLocal.find(s.getIdlot().getIdlot());
-                        lotTemp.setQuantite((lotTemp.getQuantite() - s.getQuantite()));
+                        lotTemp.setQuantite((lotTemp.getQuantite() - sOld.getQuantite()));
                         this.lotFacadeLocal.edit(lotTemp);
+
+                        LigneMvtStock lmvt = ligneMvtStockFacadeLocal.findByMvtIdLot(stock.getIdMvtStock().longValue(), lotTemp.getIdlot());
+                        if (lmvt != null) {
+                            ligneMvtStockFacadeLocal.remove(lmvt);
+                        }
+
+                        ut.commit();
                     }
                     this.stockProduits.remove(i);
                     break;
@@ -507,7 +502,7 @@ public class StockController extends AbstractStockController implements Serializ
             notifyFail(e);
         }
     }
-    
+
     public Double calculTotal(List<StockProduit> stockProduits) {
         Double resultat = (0.0D);
         if (!stockProduits.isEmpty()) {
@@ -517,7 +512,7 @@ public class StockController extends AbstractStockController implements Serializ
         }
         return resultat;
     }
-    
+
     public void updateTotal() {
         try {
             this.total = calculTotal(this.stockProduits);
@@ -525,7 +520,7 @@ public class StockController extends AbstractStockController implements Serializ
             e.printStackTrace();
         }
     }
-    
+
     public void updateTotaux() {
         try {
             this.cout_quantite = (0.0D);
@@ -537,12 +532,12 @@ public class StockController extends AbstractStockController implements Serializ
             e.printStackTrace();
         }
     }
-    
+
     public void updatedata() {
         try {
             if (this.produit.getIdproduit() != null) {
                 this.famille = this.produit.getIdfamille();
-                
+
                 this.lots = this.lotFacadeLocal.findByArticle(this.produit.getIdproduit(), this.produit.getPerissable());
                 if (this.lots.size() == 1) {
                     this.lot = this.lots.get(0);
@@ -553,12 +548,12 @@ public class StockController extends AbstractStockController implements Serializ
                 this.lot.setQuantite((0.0D));
                 this.stockProduit.setPrixAcquisition((0.0D));
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     public void updatedataLot() {
         try {
             if (this.lot != null) {
@@ -568,19 +563,19 @@ public class StockController extends AbstractStockController implements Serializ
             e.printStackTrace();
         }
     }
-    
+
     public void notifyError(String message) {
         RequestContext.getCurrentInstance().execute("PF('AjaxNotifyDialog').hide()");
         this.routine.feedBack("avertissement", "/resources/tool_images/warning.jpeg", this.routine.localizeMessage(message));
         RequestContext.getCurrentInstance().execute("PF('NotifyDialog1').show()");
     }
-    
+
     public void notifySuccess() {
         RequestContext.getCurrentInstance().execute("PF('AjaxNotifyDialog').hide()");
         this.routine.feedBack("information", "/resources/tool_images/success.png", this.routine.localizeMessage("operation_reussie"));
         RequestContext.getCurrentInstance().execute("PF('NotifyDialog1').show()");
     }
-    
+
     public void notifyFail(Exception e) {
         RequestContext.getCurrentInstance().execute("PF('AjaxNotifyDialog').hide()");
         this.routine.catchException(e, this.routine.localizeMessage("echec_operation"));

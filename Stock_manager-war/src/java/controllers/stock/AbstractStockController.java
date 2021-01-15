@@ -143,47 +143,47 @@ public class AbstractStockController {
     }
 
     public StockProduit getStockProduit() {
-        /* 164 */ return this.stockProduit;
+        return this.stockProduit;
     }
 
     public void setStockProduit(StockProduit stockProduit) {
-        /* 168 */ this.stockProduit = stockProduit;
+        this.stockProduit = stockProduit;
     }
 
     public List<StockProduit> getStockProduits() {
-        /* 172 */ return this.stockProduits;
+        return this.stockProduits;
     }
 
     public Boolean getDetail() {
-        /* 180 */ return this.detail;
+        return this.detail;
     }
 
     public void setDetail(Boolean detail) {
-        /* 184 */ this.detail = detail;
+        this.detail = detail;
     }
 
     public Boolean getModifier() {
-        /* 188 */ return this.modifier;
+        return this.modifier;
     }
 
     public Boolean getConsulter() {
-        /* 196 */ return this.consulter;
+        return this.consulter;
     }
 
     public Boolean getImprimer() {
-        /* 204 */ return this.imprimer;
+        return this.imprimer;
     }
 
     public Boolean getSupprimer() {
-        /* 212 */ return this.supprimer;
+        return this.supprimer;
     }
 
     public Famille getFamille() {
-        /* 220 */ return this.famille;
+        return this.famille;
     }
 
     public void setFamille(Famille famille) {
-        /* 224 */ this.famille = famille;
+        this.famille = famille;
     }
 
     public List<Famille> getFamilles() {
@@ -200,11 +200,11 @@ public class AbstractStockController {
     }
 
     public void setCout_quantite(Double cout_quantite) {
-        /* 241 */ this.cout_quantite = cout_quantite;
+        this.cout_quantite = cout_quantite;
     }
 
     public Double getTotal() {
-        /* 245 */ return this.total;
+        return this.total;
     }
 
     public void setTotal(Double total) {

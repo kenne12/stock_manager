@@ -33,4 +33,6 @@ public interface LigneMvtStockFacadeLocal {
     List<LigneMvtStock> findByDate(Date date) throws Exception;
 
     List<LigneMvtStock> findByIdArticleIntervale(long idArticle, Date date_debut, Date date_fin) throws Exception;
+
+    void deleteByIdMvtStock(long idMtStock);
 }
