@@ -9,20 +9,18 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 @Stateless
-public class JourneeFacade
-        extends AbstractFacade<Journee>
-        implements JourneeFacadeLocal {
+public class JourneeFacade extends AbstractFacade<Journee> implements JourneeFacadeLocal {
 
     @PersistenceContext(unitName = "Stock_manager-ejbPU")
     private EntityManager em;
 
     @Override
     protected EntityManager getEntityManager() {
-        /* 30 */ return this.em;
+        return this.em;
     }
 
     public JourneeFacade() {
-        /* 34 */ super(Journee.class);
+        super(Journee.class);
     }
 
     @Override
@@ -39,11 +37,9 @@ public class JourneeFacade
 
     @Override
     public List<Journee> find(Date date) {
-        /* 51 */ List<Journee> journees = null;
-        /* 52 */ Query query = this.em.createQuery("SELECT j FROM Journee j WHERE  j.dateJour=:date");
-        /* 53 */ query.setParameter("date", date);
-        /* 54 */ journees = query.getResultList();
-        /* 55 */ return journees;
+        Query query = this.em.createQuery("SELECT j FROM Journee j WHERE  j.dateJour=:date");
+        query.setParameter("date", date);
+        return query.getResultList();
     }
 
     @Override

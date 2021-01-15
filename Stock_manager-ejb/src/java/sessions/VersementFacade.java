@@ -58,23 +58,23 @@ public class VersementFacade extends AbstractFacade<Versement> implements Versem
 
     @Override
     public List<Versement> find(Client client, Date datedebut, Date datefin) {
-        /* 70 */ Query query = this.em.createQuery("SELECT v FROM Versement v WHERE v.idfacture.idclient.idclient=:client AND v.date BETWEEN :datedebut AND  :datefin");
-        /* 71 */ query.setParameter("client", client.getIdclient());
-        /* 72 */ query.setParameter("datedebut", datedebut).setParameter("datefin", datefin);
-        /* 73 */ return query.getResultList();
+        Query query = this.em.createQuery("SELECT v FROM Versement v WHERE v.idfacture.idclient.idclient=:client AND v.date BETWEEN :datedebut AND  :datefin");
+        query.setParameter("client", client.getIdclient());
+        query.setParameter("datedebut", datedebut).setParameter("datefin", datefin);
+        return query.getResultList();
     }
 
     @Override
     public List<Versement> find(Client client, Date date) {
-        /* 79 */ Query query = this.em.createQuery("SELECT v FROM Versement v WHERE v.idfacture.idclient.idclient=:client AND v.date=:date");
-        /* 80 */ query.setParameter("client", client.getIdclient()).setParameter("date", date);
-        /* 81 */ return query.getResultList();
+        Query query = this.em.createQuery("SELECT v FROM Versement v WHERE v.idfacture.idclient.idclient=:client AND v.date=:date");
+        query.setParameter("client", client.getIdclient()).setParameter("date", date);
+        return query.getResultList();
     }
 
     @Override
     public List<Versement> findAllRange(int idannee) {
-        /* 86 */ Query query = this.em.createQuery("SELECT v FROM Versement v WHERE v.idfacture.idAnneeMois.idannee.idannee=:idannee ORDER BY v.date DESC");
-        /* 87 */ query.setParameter("idannee", (idannee));
-        /* 88 */ return query.getResultList();
+        Query query = this.em.createQuery("SELECT v FROM Versement v WHERE v.idfacture.idAnneeMois.idannee.idannee=:idannee ORDER BY v.date DESC");
+        query.setParameter("idannee", (idannee));
+        return query.getResultList();
     }
 }

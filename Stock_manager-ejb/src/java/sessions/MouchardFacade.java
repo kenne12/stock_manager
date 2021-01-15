@@ -14,7 +14,7 @@ public class MouchardFacade extends AbstractFacade<Mouchard> implements Mouchard
 
     @Override
     protected EntityManager getEntityManager() {
-        /* 26 */ return this.em;
+        return this.em;
     }
 
     public MouchardFacade() {

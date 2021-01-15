@@ -8,8 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 @Stateless
-public class LigneinventaireFacade extends AbstractFacade<Ligneinventaire>
-        implements LigneinventaireFacadeLocal {
+public class LigneinventaireFacade extends AbstractFacade<Ligneinventaire> implements LigneinventaireFacadeLocal {
 
     @PersistenceContext(unitName = "Stock_manager-ejbPU")
     private EntityManager em;

@@ -13,11 +13,12 @@ public class ParametrageFacade
     @PersistenceContext(unitName = "Stock_manager-ejbPU")
     private EntityManager em;
 
+    @Override
     protected EntityManager getEntityManager() {
-        /* 24 */ return this.em;
+        return this.em;
     }
 
     public ParametrageFacade() {
-        /* 28 */ super(Parametrage.class);
+        super(Parametrage.class);
     }
 }

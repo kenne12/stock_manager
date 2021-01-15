@@ -87,23 +87,21 @@ public class FactureFacade extends AbstractFacade<Facture> implements FactureFac
 
     @Override
     public List<Facture> findClientDate(int client, Date date) throws Exception {
-        /* 107 */ List<Facture> factures = null;
-        /* 108 */ Query query = this.em.createQuery("SELECT f FROM Facture f WHERE f.idclient.idclient=:client AND f.dateAchat=:date ORDER BY f.numeroFacture DESC");
-        /* 109 */ query.setParameter("date", date).setParameter("client", (client));
-        /* 110 */ factures = query.getResultList();
-        /* 111 */ return factures;
+        Query query = this.em.createQuery("SELECT f FROM Facture f WHERE f.idclient.idclient=:client AND f.dateAchat=:date ORDER BY f.numeroFacture DESC");
+        query.setParameter("date", date).setParameter("client", (client));
+        return query.getResultList();
     }
 
     @Override
     public List<Facture> findClientInterval(int client, Date dateDebut, Date dateFin) throws Exception {
-        /* 116 */ Query query = this.em.createQuery("SELECT f FROM Facture f WHERE f.idclient.idclient=:client AND f.dateAchat BETWEEN :datedebut AND :datefin ORDER BY f.numeroFacture DESC");
-        /* 117 */ query.setParameter("datedebut", dateDebut).setParameter("datefin", dateFin).setParameter("client", Integer.valueOf(client));
-        /* 118 */ return query.getResultList();
+        Query query = this.em.createQuery("SELECT f FROM Facture f WHERE f.idclient.idclient=:client AND f.dateAchat BETWEEN :datedebut AND :datefin ORDER BY f.numeroFacture DESC");
+        query.setParameter("datedebut", dateDebut).setParameter("datefin", dateFin).setParameter("client", client);
+        return query.getResultList();
     }
 
     @Override
     public List<Facture> findNonregle() throws Exception {
-        /* 123 */ Query query = this.em.createQuery("SELECT f FROM Facture f WHERE f.credit=true AND f.reste>0D");
-        /* 124 */ return query.getResultList();
+        Query query = this.em.createQuery("SELECT f FROM Facture f WHERE f.credit=true AND f.reste>0D");
+        return query.getResultList();
     }
 }

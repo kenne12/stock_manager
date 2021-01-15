@@ -8,49 +8,47 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 @Stateless
-public class AnneeFacade
-        extends AbstractFacade<Annee>
-        implements AnneeFacadeLocal {
+public class AnneeFacade extends AbstractFacade<Annee> implements AnneeFacadeLocal {
 
     @PersistenceContext(unitName = "Stock_manager-ejbPU")
     private EntityManager em;
 
     @Override
     protected EntityManager getEntityManager() {
-        /* 27 */ return this.em;
+        return this.em;
     }
 
     public AnneeFacade() {
-        /* 31 */ super(Annee.class);
+        super(Annee.class);
     }
 
     @Override
     public Integer nextVal() {
-        /* 36 */ Query query = this.em.createQuery("SELECT MAX(a.idannee) FROM Annee a");
-        /* 37 */ Integer result = (Integer) query.getSingleResult();
-        /* 38 */ if (result == null) {
-            /* 39 */ result = (1);
+        Query query = this.em.createQuery("SELECT MAX(a.idannee) FROM Annee a");
+        Integer result = (Integer) query.getSingleResult();
+        if (result == null) {
+            result = (1);
         } else {
-            /* 41 */ result = (result.intValue() + 1);
+            result = result + 1;
         }
-        /* 43 */ return result;
+        return result;
     }
 
     @Override
     public List<Annee> findByEtat(boolean etat) throws Exception {
-        /* 48 */ List<Annee> annees = null;
-        /* 49 */ Query query = this.em.createQuery("SELECT a FROM Annee a WHERE a.etat=:etat ORDER BY a.nom");
-        /* 50 */ query.setParameter("etat", (etat));
-        /* 51 */ annees = query.getResultList();
-        /* 52 */ return annees;
+        List<Annee> annees = null;
+        Query query = this.em.createQuery("SELECT a FROM Annee a WHERE a.etat=:etat ORDER BY a.nom");
+        query.setParameter("etat", (etat));
+        annees = query.getResultList();
+        return annees;
     }
 
     @Override
     public List<Annee> findByRange() {
-        /* 57 */ List<Annee> annees = null;
-        /* 58 */ Query query = this.em.createQuery("SELECT a FROM Annee a  ORDER BY a.nom");
-        /* 59 */ annees = query.getResultList();
-        /* 60 */ return annees;
+        List<Annee> annees = null;
+        Query query = this.em.createQuery("SELECT a FROM Annee a  ORDER BY a.nom");
+        annees = query.getResultList();
+        return annees;
     }
 
     @Override

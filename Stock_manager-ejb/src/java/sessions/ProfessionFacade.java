@@ -6,19 +6,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Stateless
-public class ProfessionFacade
-        extends AbstractFacade<Profession>
-        implements ProfessionFacadeLocal {
+public class ProfessionFacade extends AbstractFacade<Profession> implements ProfessionFacadeLocal {
 
     @PersistenceContext(unitName = "Stock_manager-ejbPU")
     private EntityManager em;
 
     @Override
     protected EntityManager getEntityManager() {
-        /* 24 */ return this.em;
+        return this.em;
     }
 
     public ProfessionFacade() {
-        /* 28 */ super(Profession.class);
+        super(Profession.class);
     }
 }

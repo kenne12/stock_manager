@@ -8,49 +8,43 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 @Stateless
-public class PrivilegeFacade
-        extends AbstractFacade<Privilege>
-        implements PrivilegeFacadeLocal {
+public class PrivilegeFacade extends AbstractFacade<Privilege> implements PrivilegeFacadeLocal {
 
     @PersistenceContext(unitName = "Stock_manager-ejbPU")
     private EntityManager em;
 
     @Override
     protected EntityManager getEntityManager() {
-        /* 27 */ return this.em;
+        return this.em;
     }
 
     public PrivilegeFacade() {
-        /* 31 */ super(Privilege.class);
+        super(Privilege.class);
     }
 
     @Override
     public List<Privilege> findAll1() {
-        /* 36 */ List<Privilege> privileges = null;
-        /* 37 */ Query query = this.em.createQuery("SELECT p FROM Privilege p ORDER BY p.idutilisateur.nom, p.idutilisateur.prenom,p.idmenu.idmenu DESC");
-        /* 38 */ privileges = query.getResultList();
-        /* 39 */ return privileges;
+        Query query = this.em.createQuery("SELECT p FROM Privilege p ORDER BY p.idutilisateur.nom, p.idutilisateur.prenom,p.idmenu.idmenu DESC");
+        return query.getResultList();
     }
 
     @Override
     public Long nextVal() {
-        /* 44 */ Query query = this.em.createQuery("SELECT MAX(p.idprivilege) FROM Privilege p");
-        /* 45 */ Long result = (Long) query.getSingleResult();
-        /* 46 */ if (result == null) {
-            /* 47 */ result = (1L);
+        Query query = this.em.createQuery("SELECT MAX(p.idprivilege) FROM Privilege p");
+        Long result = (Long) query.getSingleResult();
+        if (result == null) {
+            result = (1L);
         } else {
-            /* 49 */ result = (result + 1L);
+            result = (result + 1L);
         }
-        /* 51 */ return result;
+        return result;
     }
 
     @Override
     public List<Privilege> findByUser(int utilisateur) {
-        /* 56 */ List<Privilege> privileges = null;
-        /* 57 */ Query query = this.em.createQuery("SELECT p FROM Privilege p WHERE p.idutilisateur.idutilisateur=:utilisateur");
-        /* 58 */ query.setParameter("utilisateur", (utilisateur));
-        /* 59 */ privileges = query.getResultList();
-        /* 60 */ return privileges;
+        Query query = this.em.createQuery("SELECT p FROM Privilege p WHERE p.idutilisateur.idutilisateur=:utilisateur");
+        query.setParameter("utilisateur", (utilisateur));
+        return query.getResultList();
     }
 
     @Override

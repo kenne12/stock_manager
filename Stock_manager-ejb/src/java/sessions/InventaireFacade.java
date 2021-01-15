@@ -18,43 +18,41 @@ public class InventaireFacade
 
     @Override
     protected EntityManager getEntityManager() {
-        /* 28 */ return this.em;
+        return this.em;
     }
 
     public InventaireFacade() {
-        /* 32 */ super(Inventaire.class);
+        super(Inventaire.class);
     }
 
     @Override
     public Long nextVal() {
-        /* 37 */ Query query = this.em.createQuery("SELECT MAX(i.idinventaire) FROM Inventaire i");
-        /* 38 */ Long result = (Long) query.getSingleResult();
-        /* 39 */ if (result == null) {
-            /* 40 */ result = (1L);
+        Query query = this.em.createQuery("SELECT MAX(i.idinventaire) FROM Inventaire i");
+        Long result = (Long) query.getSingleResult();
+        if (result == null) {
+            result = (1L);
         } else {
-            /* 42 */ result = (result + 1L);
+            result = (result + 1L);
         }
-        /* 44 */ return result;
+        return result;
     }
 
     @Override
     public Long nextVal(AnneeMois anneeMois) {
-        /* 49 */ Query query = this.em.createQuery("SELECT COUNT(i.idinventaire) FROM Inventaire i WHERE i.idmois.idAnneeMois=:mois");
-        /* 50 */ query.setParameter("mois", anneeMois.getIdAnneeMois());
-        /* 51 */ Long result = (Long) query.getSingleResult();
-        /* 52 */ if (result == null) {
-            /* 53 */ result = (1L);
+        Query query = this.em.createQuery("SELECT COUNT(i.idinventaire) FROM Inventaire i WHERE i.idmois.idAnneeMois=:mois");
+        query.setParameter("mois", anneeMois.getIdAnneeMois());
+        Long result = (Long) query.getSingleResult();
+        if (result == null) {
+            result = (1L);
         } else {
-            /* 55 */ result = (result + 1L);
+            result = (result + 1L);
         }
-        /* 57 */ return result;
+        return result;
     }
 
     @Override
     public List<Inventaire> findAllRange() throws Exception {
-        /* 62 */ List<Inventaire> inventaires = null;
-        /* 63 */ Query query = this.em.createQuery("SELECT i FROM Inventaire i ORDER BY i.dateInventaire DESC");
-        /* 64 */ inventaires = query.getResultList();
-        /* 65 */ return inventaires;
+        Query query = this.em.createQuery("SELECT i FROM Inventaire i ORDER BY i.dateInventaire DESC");
+        return query.getResultList();
     }
 }

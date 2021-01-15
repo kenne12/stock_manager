@@ -1,6 +1,5 @@
 package controllers.recette;
 
-import controllers.recette.AbstractRecetteController;
 import entities.Facture;
 import entities.Journee;
 import entities.Stock;
