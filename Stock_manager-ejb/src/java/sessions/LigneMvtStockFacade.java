@@ -79,6 +79,5 @@ public class LigneMvtStockFacade extends AbstractFacade<LigneMvtStock> implement
         Query query = em.createQuery("DELETE  FROM LigneMvtStock l WHERE l.idMvtStock.idMvtStock=:idMtStock");
         query.setParameter("idMtStock", idMtStock);
         query.executeUpdate();
-
     }
 }

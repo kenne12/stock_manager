@@ -24,4 +24,6 @@ public interface LigneinventaireFacadeLocal {
     Long nextVal();
 
     List<Ligneinventaire> findByInventaire(Long paramLong) throws Exception;
+
+    void deleteByIdInventaire(long idInventaire);
 }

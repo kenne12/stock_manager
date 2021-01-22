@@ -87,15 +87,14 @@ public class RecetteController extends AbstractRecetteController implements Seri
                 List<Journee> list = this.journeeFacadeLocal.findByIdmois(this.anneeMois.getIdAnneeMois());
                 for (Journee j : list) {
                     List<Facture> factures = this.factureFacadeLocal.findAllDate(j.getDateJour());
-
                     List<Stock> stocks = this.stockFacadeLocal.findAllDate(j.getDateJour());
 
                     Double montantSortie = 0.0D;
-                    Double bord = 0.0D;
+                    Double bord = 0d;
 
                     for (Facture f : factures) {
                         montantSortie += f.getMontantTtc();
-                        bord += bord + f.getBord();
+                        bord += f.getBord();
                     }
 
                     j.setMontant(montantSortie);
@@ -122,7 +121,6 @@ public class RecetteController extends AbstractRecetteController implements Seri
         try {
             if (!Utilitaires.isAccess(32L)) {
                 notifyError("acces_refuse");
-
                 return;
             }
             this.fileName1 = PrintUtils.printRecette(this.anneeMois, this.journees);

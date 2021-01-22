@@ -380,6 +380,7 @@ public class VenteController extends AbstractVenteController implements Serializ
                             this.commandeFacadeLocal.edit(c);
                             continue;
                         }
+                        
                         c.setIdcommande(this.commandeFacadeLocal.nextVal());
                         c.setIdfacture(this.facture);
                         this.commandeFacadeLocal.create(c);
@@ -402,7 +403,7 @@ public class VenteController extends AbstractVenteController implements Serializ
                         lmvts.setQuantiteAvant(qteAvant);
                         lmvts.setQuantiteEntree(0.0D);
                         lmvts.setQuantiteSortie(c.getQuantite());
-                        lmvts.setReste(c.getIdlot().getQuantite());
+                        lmvts.setReste(l.getQuantite());
                         lmvts.setType("SORTIE");
                         this.ligneMvtStockFacadeLocal.create(lmvts);
                     }
@@ -441,7 +442,7 @@ public class VenteController extends AbstractVenteController implements Serializ
 
                 if (this.facture.getVenteDirecte()) {
 
-                    if (!Utilitaires.isAccess((25L))) {
+                    if (!Utilitaires.isAccess(25L)) {
                         notifyError("acces_refuse");
                         this.supprimer = this.modifier = this.imprimer = true;
                         this.facture = null;
@@ -514,7 +515,6 @@ public class VenteController extends AbstractVenteController implements Serializ
             if (!Utilitaires.isAccess((26L))) {
                 notifyError("acces_refuse");
                 this.facture = null;
-
                 return;
             }
             if (this.facture != null) {
@@ -619,8 +619,8 @@ public class VenteController extends AbstractVenteController implements Serializ
         for (Commande c : commandes) {
             resultat += (c.getMontant() * c.getQuantite());
             commandes.get(i).setBenefice(((commandes.get(i).getMontant() - commandes.get(i).getIdlot().getPrixAchat()) * commandes.get(i).getQuantite()));
-            if (((Commande) commandes.get(i)).getBenefice() < 0d) {
-                ((Commande) commandes.get(i)).setBenefice((0d));
+            if (commandes.get(i).getBenefice() < 0d) {
+                commandes.get(i).setBenefice(0d);
             }
             i++;
         }

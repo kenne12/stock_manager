@@ -315,7 +315,7 @@ public class StockController extends AbstractStockController implements Serializ
                         lmvts.setFournisseur(this.fournisseur.getRaisonSociale());
                         lmvts.setQuantiteEntree(s.getQuantite());
                         lmvts.setQuantiteSortie((0.0D));
-                        lmvts.setReste(s.getIdlot().getQuantite());
+                        lmvts.setReste(l.getQuantite());
                         lmvts.setQuantiteAvant(quantite_avant);
                         lmvts.setType("ENTREE");
                         this.ligneMvtStockFacadeLocal.create(lmvts);

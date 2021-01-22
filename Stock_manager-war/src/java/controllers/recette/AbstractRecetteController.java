@@ -82,13 +82,13 @@ public class AbstractRecetteController {
 
     protected String sessionPassword = "";
 
-    protected Boolean session = (true);
+    protected Boolean session = true;
 
-    protected Boolean detail = (true);
-    protected Boolean modifier = (true);
-    protected Boolean consulter = (true);
-    protected Boolean imprimer = (true);
-    protected Boolean supprimer = (true);
+    protected Boolean detail = true;
+    protected Boolean modifier = true;
+    protected Boolean consulter = true;
+    protected Boolean imprimer = true;
+    protected Boolean supprimer = true;
 
     protected boolean showQuantiteDosage = SessionMBean.getParametrage().getEtatQuantiteDosage();
     protected boolean showFormeProduit = SessionMBean.getParametrage().getEtatFormeProduit();
@@ -247,10 +247,6 @@ public class AbstractRecetteController {
         return this.bailleurs;
     }
 
-    public void setBailleurs(List<Bailleur> bailleurs) {
-        this.bailleurs = bailleurs;
-    }
-
     public UserP getUserP() {
         return this.userP;
     }
@@ -301,16 +297,8 @@ public class AbstractRecetteController {
         return this.listMois;
     }
 
-    public void setListMois(List<AnneeMois> listMois) {
-        this.listMois = listMois;
-    }
-
     public List<Journee> getJournees() {
         return this.journees;
-    }
-
-    public void setJournees(List<Journee> journees) {
-        this.journees = journees;
     }
 
     public Annee getAnnee() {
