@@ -440,9 +440,9 @@ public class InventaireGlobalController extends AbstractInventaireGlobalControll
         }
     }
 
-    public void initPrinter(Inventaire i) {
+    public void initPrinter(Inventaire i, String mode) {
         this.inventaire = i;
-        print();
+        print(mode);
     }
 
     public void initEdit(Inventaire i) {
@@ -460,7 +460,7 @@ public class InventaireGlobalController extends AbstractInventaireGlobalControll
         delete();
     }
 
-    public void print() {
+    public void print(String mode) {
         try {
             if (!Utilitaires.isAccess((51L))) {
                 notifyError("acces_refuse");
@@ -470,7 +470,11 @@ public class InventaireGlobalController extends AbstractInventaireGlobalControll
             if (this.inventaire != null) {
                 List<Ligneinventaire> l = this.ligneinventaireFacadeLocal.findByInventaire(this.inventaire.getIdinventaire());
                 this.inventaire.setLigneinventaireList(l);
-                this.fileName = PrintUtils.printInventaire(this.inventaire, SessionMBean.getParametrage());
+                if (mode.equals("1")) {
+                    this.fileName = PrintUtils.printInventaireDetaille(this.inventaire, SessionMBean.getParametrage());
+                } else {
+                    this.fileName = PrintUtils.printInventaire(this.inventaire, SessionMBean.getParametrage());
+                }
                 RequestContext.getCurrentInstance().execute("PF('FactureImprimerDialog').show()");
             } else {
                 notifyError("not_row_selected");

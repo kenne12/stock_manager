@@ -365,9 +365,3 @@ public class AbstractProduitController {
         /* 379 */ return this.mode;
     }
 }
-
-
-/* Location:              C:\Users\USER\Desktop\jar\Stock_manager4694646969736841869\Stock_manager-war.war!\WEB-INF\classes\controllers\produit\AbstractProduitController.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */

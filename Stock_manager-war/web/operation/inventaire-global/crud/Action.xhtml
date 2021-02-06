@@ -46,7 +46,7 @@
                            message="#{langue['Message.Confirm.Supprimer']}?"
                            icon="ui-icon-alert"/>
             </p:commandButton>
-            
+
             <p:commandButton id="annuler" 
                              icon="ui-icon-refresh"  
                              value="#{langue.annuler}" 
@@ -59,8 +59,14 @@
             </p:commandButton>
 
             <p:commandButton id="imprimer" icon="ui-icon-print"  
+                             value="#{langue['Conv.Imprimer']} D" 
+                             actionListener="#{inventaireGlobalController.print('1')}"
+                             disabled="#{inventaireGlobalController.imprimer}"
+                             update=":FactureImprimerForm,:FactureImprimerDlg,:notify1"/>
+
+            <p:commandButton id="imprimer_2" icon="ui-icon-print"  
                              value="#{langue['Conv.Imprimer']}" 
-                             actionListener="#{inventaireGlobalController.print()}"
+                             actionListener="#{inventaireGlobalController.print('2')}"
                              disabled="#{inventaireGlobalController.imprimer}"
                              update=":FactureImprimerForm,:FactureImprimerDlg,:notify1"/>  
 
