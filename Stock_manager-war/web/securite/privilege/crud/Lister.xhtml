@@ -29,7 +29,7 @@
                          rows="10"
                          rowsPerPageTemplate="10,20,30,40,50">                         
                                          
-                <p:column filterBy="#{item.idpersonnel.nom} #{item.idpersonnel.prenom}" style="width: 50%" >
+                <p:column filterBy="#{item.idpersonnel.nom} #{item.idpersonnel.prenom}" filterMatchMode="contains" style="width: 50%" >
                     <f:facet name="header">
                         <h:outputText value="#{langue.personnel}"/>
                     </f:facet>

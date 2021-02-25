@@ -12,38 +12,39 @@ import sessions.LotFacadeLocal;
 import utils.JsfUtil;
 
 @FacesConverter("lotConverter")
-public class LotConverter
-        implements Converter {
+public class LotConverter implements Converter {
 
     @EJB
     private LotFacadeLocal ejbFacade;
 
+    @Override
     public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
-        /* 22 */ if (value == null || value.length() == 0 || JsfUtil.isDummySelectItem(component, value)) {
-            /* 23 */ return null;
+        if (value == null || value.length() == 0 || JsfUtil.isDummySelectItem(component, value)) {
+            return null;
         }
-        /* 25 */ return this.ejbFacade.find(getKey(value));
+        return this.ejbFacade.find(getKey(value));
     }
 
     Long getKey(String value) {
-        /* 30 */ Long key = Long.valueOf(value);
-        /* 31 */ return key;
+        Long key = Long.valueOf(value);
+        return key;
     }
 
     String getStringKey(Long value) {
-        /* 35 */ return "" + value;
+        return "" + value;
     }
 
+    @Override
     public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
-        /* 40 */ if (object == null || (object instanceof String && ((String) object)
-                /* 41 */.length() == 0)) {
-            /* 42 */ return null;
+        if (object == null || (object instanceof String && ((String) object)
+                .length() == 0)) {
+            return null;
         }
-        /* 44 */ if (object instanceof Lot) {
-            /* 45 */ Lot l = (Lot) object;
-            /* 46 */ return getStringKey(l.getIdlot());
+        if (object instanceof Lot) {
+            Lot l = (Lot) object;
+            return getStringKey(l.getIdlot());
         }
-        /* 48 */ Logger.getLogger(getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Lot.class.getName()});
-        /* 49 */ return null;
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Lot.class.getName()});
+        return null;
     }
 }

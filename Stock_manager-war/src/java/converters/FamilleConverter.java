@@ -12,38 +12,38 @@ import sessions.FamilleFacadeLocal;
 import utils.JsfUtil;
 
 @FacesConverter("familleConverter")
-public class FamilleConverter
-        implements Converter {
+public class FamilleConverter implements Converter {
 
     @EJB
     private FamilleFacadeLocal ejbFacade;
 
+    @Override
     public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
-        /* 22 */ if (value == null || value.length() == 0 || JsfUtil.isDummySelectItem(component, value)) {
-            /* 23 */ return null;
+        if (value == null || value.length() == 0 || JsfUtil.isDummySelectItem(component, value)) {
+            return null;
         }
-        /* 25 */ return this.ejbFacade.find(getKey(value));
+        return this.ejbFacade.find(getKey(value));
     }
 
     Integer getKey(String value) {
-        /* 30 */ Integer key = Integer.valueOf(value);
-        /* 31 */ return key;
+        Integer key = Integer.valueOf(value);
+        return key;
     }
 
     String getStringKey(Integer value) {
-        /* 35 */ return "" + value;
+        return "" + value;
     }
 
+    @Override
     public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
-        /* 40 */ if (object == null || (object instanceof String && ((String) object)
-                /* 41 */.length() == 0)) {
-            /* 42 */ return null;
+        if (object == null || (object instanceof String && ((String) object).length() == 0)) {
+            return null;
         }
-        /* 44 */ if (object instanceof Famille) {
-            /* 45 */ Famille o = (Famille) object;
-            /* 46 */ return getStringKey(o.getIdfamille());
+        if (object instanceof Famille) {
+            Famille f = (Famille) object;
+            return getStringKey(f.getIdfamille());
         }
-        /* 48 */ Logger.getLogger(getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Famille.class.getName()});
-        /* 49 */ return null;
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Famille.class.getName()});
+        return null;
     }
 }

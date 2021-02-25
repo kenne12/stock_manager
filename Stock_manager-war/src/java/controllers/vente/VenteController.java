@@ -89,10 +89,10 @@ public class VenteController extends AbstractVenteController implements Serializ
             this.facture.setComptabilise((false));
             this.facture.setDateAchat(SessionMBean.getDateOuverture());
             this.facture.setMontantPaye((0.0D));
-            this.facture.setReste((0.0D));
-            this.facture.setMontantRemise((0.0D));
-            this.facture.setMontantTtc((0.0D));
-            this.facture.setMontantTva((0.0D));
+            this.facture.setReste(0.0D);
+            this.facture.setMontantRemise(0.0D);
+            this.facture.setMontantTtc(0.0D);
+            this.facture.setMontantTva(0.0D);
             this.facture.setTauxRemise(SessionMBean.getParametrage().getTauxRemise());
             this.facture.setTauxTva(SessionMBean.getParametrage().getTauxTva());
             this.commandes.clear();

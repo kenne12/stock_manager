@@ -7,17 +7,17 @@ import javax.ejb.Local;
 @Local
 public interface MoisFacadeLocal {
 
-    void create(Mois paramMois);
+    void create(Mois mois);
 
-    void edit(Mois paramMois);
+    void edit(Mois mois);
 
-    void remove(Mois paramMois);
+    void remove(Mois mois);
 
-    Mois find(Object paramObject);
+    Mois find(Object id);
 
     List<Mois> findAll();
 
-    List<Mois> findRange(int[] paramArrayOfint);
+    List<Mois> findRange(int[] range);
 
     int count();
 

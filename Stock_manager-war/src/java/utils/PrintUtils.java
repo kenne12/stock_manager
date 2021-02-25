@@ -683,29 +683,29 @@ public class PrintUtils {
     public static String printFacture(Facture facture, Parametrage parametrage) {
         String fileName = "";
         try {
-            /*  689 */ SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            /*  690 */ SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
-            /*  691 */ fileName = "Facture_" + facture.getIdclient().getNom() + "_" + facture.getNumeroFacture() + "_" + sdf.format(facture.getDateAchat()) + ".pdf";
-            /*  692 */ Document rapport = new Document();
-            /*  693 */ PdfWriter.getInstance(rapport, new FileOutputStream(Utilitaires.path + "/reports/facture/" + fileName));
-            /*  694 */ rapport.open();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
+            fileName = "Facture_" + facture.getIdclient().getNom() + "_" + facture.getNumeroFacture() + "_" + sdf.format(facture.getDateAchat()) + ".pdf";
+            Document rapport = new Document();
+            PdfWriter.getInstance(rapport, new FileOutputStream(Utilitaires.path + "/reports/facture/" + fileName));
+            rapport.open();
 
-            /*  696 */ createEntete(rapport, parametrage);
+            createEntete(rapport, parametrage);
 
-            /*  698 */ float[] width_entete = {2.0F, 2.2F, 1.8F, 3.5F, 1.0F, 1.7F};
-            /*  699 */ PdfPTable entete_1 = new PdfPTable(width_entete);
-            /*  700 */ entete_1.setWidthPercentage(100.0F);
+            float[] width_entete = {2.0F, 2.2F, 1.8F, 3.5F, 1.0F, 1.7F};
+            PdfPTable entete_1 = new PdfPTable(width_entete);
+            entete_1.setWidthPercentage(100.0F);
 
-            /*  702 */ entete_1.addCell(createPdfPCell("Date de tirage   : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  703 */ entete_1.addCell(createPdfPCell(" " + sdf.format(new Date()), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  704 */ entete_1.addCell(createPdfPCell("Code du client : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  705 */ entete_1.addCell(createPdfPCell(" " + facture.getIdclient().getCode(), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  706 */ entete_1.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  707 */ entete_1.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell("Date de tirage   : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell(" " + sdf.format(new Date()), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell("Code du client : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell(" " + facture.getIdclient().getCode(), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
 
-            /*  709 */ entete_1.addCell(createPdfPCell("Heure de tirage : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  710 */ entete_1.addCell(createPdfPCell(" " + sdf1.format(new Date()), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  711 */ entete_1.addCell(createPdfPCell("Nom du client   : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell("Heure de tirage : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell(" " + sdf1.format(new Date()), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell("Nom du client   : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
             /*  712 */ entete_1.addCell(createPdfPCell(" " + facture.getIdclient().getNom(), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
             /*  713 */ entete_1.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
             /*  714 */ entete_1.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
@@ -871,95 +871,95 @@ public class PrintUtils {
     }
 
     public static String printBonCommandeClient(CommandeClient commande, Parametrage parametrage) {
-        /*  889 */ String fileName = "";
+        String fileName = "";
         try {
-            /*  891 */ SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            /*  892 */ SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
-            /*  893 */ fileName = "Boncommande_" + commande.getIdclient().getNom() + "_" + sdf.format(commande.getDateCommande()) + ".pdf";
-            /*  894 */ Document rapport = new Document();
-            /*  895 */ PdfWriter.getInstance(rapport, new FileOutputStream(Utilitaires.path + "/reports/facture/" + fileName));
-            /*  896 */ rapport.open();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
+            fileName = "Boncommande_" + commande.getIdclient().getNom() + "_" + sdf.format(commande.getDateCommande()) + ".pdf";
+            Document rapport = new Document();
+            PdfWriter.getInstance(rapport, new FileOutputStream(Utilitaires.path + "/reports/facture/" + fileName));
+            rapport.open();
 
-            /*  898 */ createEntete(rapport, parametrage);
+            createEntete(rapport, parametrage);
 
-            /*  900 */ float[] width_entete = {2.0F, 2.3F, 1.8F, 3.8F, 1.0F, 1.0F};
-            /*  901 */ PdfPTable entete_1 = new PdfPTable(width_entete);
-            /*  902 */ entete_1.setWidthPercentage(100.0F);
+            float[] width_entete = {2.0F, 2.3F, 1.8F, 3.8F, 1.0F, 1.0F};
+            PdfPTable entete_1 = new PdfPTable(width_entete);
+            entete_1.setWidthPercentage(100.0F);
 
-            /*  904 */ entete_1.addCell(createPdfPCell("Date de tirage   : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  905 */ entete_1.addCell(createPdfPCell(" " + sdf.format(new Date()), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  906 */ entete_1.addCell(createPdfPCell("Code du client : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  907 */ entete_1.addCell(createPdfPCell(" " + commande.getIdclient().getCode(), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  908 */ entete_1.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  909 */ entete_1.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell("Date de tirage   : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell(" " + sdf.format(new Date()), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell("Code du client : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell(" " + commande.getIdclient().getCode(), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
 
-            /*  911 */ entete_1.addCell(createPdfPCell("Heure de tirage : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  912 */ entete_1.addCell(createPdfPCell(" " + sdf1.format(new Date()), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  913 */ entete_1.addCell(createPdfPCell("Nom du client   : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  914 */ entete_1.addCell(createPdfPCell(" " + commande.getIdclient().getNom(), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  915 */ entete_1.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  916 */ entete_1.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell("Heure de tirage : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell(" " + sdf1.format(new Date()), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell("Nom du client   : ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell(" " + commande.getIdclient().getNom(), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            entete_1.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
 
-            /*  918 */ rapport.add((Element) entete_1);
-            /*  919 */ rapport.add((Element) new Paragraph(" ", new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
+            rapport.add(entete_1);
+            rapport.add(new Paragraph(" ", new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
 
-            /*  921 */ float[] widths = {1.4F, 3.2F, 0.8F, 1.3F, 0.8F, 1.1F};
-            /*  922 */ PdfPTable table = new PdfPTable(widths);
-            /*  923 */ table.setWidthPercentage(100.0F);
+            float[] widths = {1.4F, 3.2F, 0.8F, 1.3F, 0.8F, 1.1F};
+            PdfPTable table = new PdfPTable(widths);
+            table.setWidthPercentage(100.0F);
 
-            /*  925 */ Paragraph titre = new Paragraph("BON DE COMMANDE N° : " + commande.getCode() + " / " + sdf.format(commande.getDateCommande()), new Font(Font.FontFamily.TIMES_ROMAN, 14.0F, 1));
-            /*  926 */ titre.setAlignment(1);
-            /*  927 */ rapport.add((Element) titre);
+            Paragraph titre = new Paragraph("BON DE COMMANDE N° : " + commande.getCode() + " / " + sdf.format(commande.getDateCommande()), new Font(Font.FontFamily.TIMES_ROMAN, 14.0F, 1));
+            titre.setAlignment(1);
+            rapport.add((Element) titre);
 
-            /*  929 */ Paragraph ligne = new Paragraph("----------------------------------------------------------------------------------------------------------------------------------------------", new Font(Font.FontFamily.TIMES_ROMAN, 11.0F, 2));
-            /*  930 */ rapport.add((Element) ligne);
+            Paragraph ligne = new Paragraph("----------------------------------------------------------------------------------------------------------------------------------------------", new Font(Font.FontFamily.TIMES_ROMAN, 11.0F, 2));
+            rapport.add((Element) ligne);
 
-            /*  932 */ rapport.add((Element) new Paragraph(" "));
+            rapport.add((Element) new Paragraph(" "));
 
-            /*  934 */ table.addCell(createPdfPCell("Ref", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
-            /*  935 */ table.addCell(createPdfPCell("Désignation", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
-            /*  936 */ table.addCell(createPdfPCell("Quantité", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
-            /*  937 */ table.addCell(createPdfPCell("Présentation", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
-            /*  938 */ table.addCell(createPdfPCell("P.U", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
-            /*  939 */ table.addCell(createPdfPCell("Prix total", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
+            table.addCell(createPdfPCell("Ref", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
+            table.addCell(createPdfPCell("Désignation", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
+            table.addCell(createPdfPCell("Quantité", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
+            table.addCell(createPdfPCell("Présentation", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
+            table.addCell(createPdfPCell("P.U", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
+            table.addCell(createPdfPCell("Prix total", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
 
-            /*  941 */ Double quantite = (0.0D);
-            /*  942 */ Double total = (0.0D);
+            Double quantite = (0.0D);
+            Double total = (0.0D);
             int compteur = 1;
             for (LigneCommandeClient l : commande.getLigneCommandeClientList()) {
-                /*  945 */ quantite = (quantite + l.getQuantite());
-                /*  946 */ total += (l.getMontant() * l.getQuantite());
-                /*  947 */ table.addCell(createPdfPCell(" " + l.getIdproduit().getCode(), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
-                /*  948 */ table.addCell(createPdfPCell(" " + Utilitaires.formatPrenomMaj(l.getIdproduit().getNom()), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
-                /*  949 */ table.addCell(createPdfPCell(" " + JsfUtil.formaterStringMoney(l.getQuantite()), 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
-                /*  950 */ table.addCell(createPdfPCell(" " + Utilitaires.formatPrenomMaj(l.getIdproduit().getIdUnite().getNom()), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
-                /*  951 */ table.addCell(createPdfPCell(" " + JsfUtil.formaterStringMoney(l.getMontant()), 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
-                /*  952 */ table.addCell(createPdfPCell(" " + JsfUtil.formaterStringMoney((l.getMontant() * l.getQuantite())), 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
-                /*  953 */ compteur++;
+                quantite += l.getQuantite();
+                total += (l.getMontant() * l.getQuantite());
+                table.addCell(createPdfPCell(" " + l.getIdproduit().getCode(), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
+                table.addCell(createPdfPCell(" " + Utilitaires.formatPrenomMaj(l.getIdproduit().getNom()), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
+                table.addCell(createPdfPCell(" " + JsfUtil.formaterStringMoney(l.getQuantite()), 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
+                table.addCell(createPdfPCell(" " + Utilitaires.formatPrenomMaj(l.getIdproduit().getIdUnite().getNom()), 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
+                table.addCell(createPdfPCell(" " + JsfUtil.formaterStringMoney(l.getMontant()), 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
+                table.addCell(createPdfPCell(" " + JsfUtil.formaterStringMoney((l.getMontant() * l.getQuantite())), 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0)));
+                compteur++;
             }
 
-            /*  956 */ rapport.add((Element) table);
+            rapport.add(table);
 
-            /*  958 */ float[] width = {2.0F, 1.0F, 0.5F, 2.0F, 2.0F, 1.5F};
-            /*  959 */ PdfPTable bilan = new PdfPTable(width);
-            /*  960 */ bilan.setWidthPercentage(100.0F);
-            /*  961 */ rapport.add((Element) new Paragraph(" "));
+            float[] width = {2.0F, 1.0F, 0.5F, 2.0F, 2.0F, 1.5F};
+            PdfPTable bilan = new PdfPTable(width);
+            bilan.setWidthPercentage(100.0F);
+            rapport.add((Element) new Paragraph(" "));
 
-            /*  966 */ bilan.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  967 */ bilan.addCell(createPdfPCell(" ", 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  968 */ bilan.addCell(createPdfPCell(" ", 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  969 */ bilan.addCell(createPdfPCell(" ", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  970 */ bilan.addCell(createPdfPCell(" ", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  971 */ bilan.addCell(createPdfPCell(" VALEUR", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 1, 1, 1, 1));
+            bilan.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            bilan.addCell(createPdfPCell(" ", 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            bilan.addCell(createPdfPCell(" ", 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            bilan.addCell(createPdfPCell(" ", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            bilan.addCell(createPdfPCell(" ", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            bilan.addCell(createPdfPCell(" VALEUR", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 1, 1, 1, 1));
 
-            /*  976 */ bilan.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  977 */ bilan.addCell(createPdfPCell(" ", 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  978 */ bilan.addCell(createPdfPCell(" ", 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  979 */ bilan.addCell(createPdfPCell(" ", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  980 */ bilan.addCell(createPdfPCell(" ", 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
-            /*  981 */ bilan.addCell(createPdfPCell(" " + JsfUtil.formaterStringMoney(total), 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 1, 1, 0, 1));
+            bilan.addCell(createPdfPCell(" ", 1, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            bilan.addCell(createPdfPCell(" ", 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            bilan.addCell(createPdfPCell(" ", 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            bilan.addCell(createPdfPCell(" ", 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            bilan.addCell(createPdfPCell(" ", 3, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 0, 0, 0, 0));
+            bilan.addCell(createPdfPCell(" " + JsfUtil.formaterStringMoney(total), 2, new Font(Font.FontFamily.TIMES_ROMAN, 10.0F, 0), 1, 1, 0, 1));
 
-            /*  983 */ rapport.add((Element) bilan);
+            rapport.add((Element) bilan);
 
             rapport.close();
         } catch (DocumentException ex) {

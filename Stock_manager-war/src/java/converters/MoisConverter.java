@@ -12,44 +12,39 @@ import sessions.MoisFacadeLocal;
 import utils.JsfUtil;
 
 @FacesConverter("moisConverter")
-public class MoisConverter
-        implements Converter {
+public class MoisConverter implements Converter {
 
     @EJB
     private MoisFacadeLocal ejbFacade;
 
+    @Override
     public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
-        /* 24 */ if (value == null || value.length() == 0 || JsfUtil.isDummySelectItem(component, value)) {
-            /* 25 */ return null;
+        if (value == null || value.length() == 0 || JsfUtil.isDummySelectItem(component, value)) {
+            return null;
         }
-        /* 27 */ return this.ejbFacade.find(getKey(value));
+        return this.ejbFacade.find(getKey(value));
     }
 
     Integer getKey(String value) {
-        /* 32 */ Integer key = Integer.valueOf(value);
-        /* 33 */ return key;
+        Integer key = Integer.valueOf(value);
+        return key;
     }
 
     String getStringKey(Integer value) {
-        /* 37 */ return "" + value;
+        return "" + value;
     }
 
+    @Override
     public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
-        /* 42 */ if (object == null || (object instanceof String && ((String) object)
-                /* 43 */.length() == 0)) {
-            /* 44 */ return null;
+        if (object == null || (object instanceof String && ((String) object)
+                .length() == 0)) {
+            return null;
         }
-        /* 46 */ if (object instanceof Mois) {
-            /* 47 */ Mois m = (Mois) object;
-            /* 48 */ return getStringKey(m.getIdmois());
+        if (object instanceof Mois) {
+            Mois m = (Mois) object;
+            return getStringKey(m.getIdmois());
         }
-        /* 50 */ Logger.getLogger(getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Mois.class.getName()});
-        /* 51 */ return null;
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Mois.class.getName()});
+        return null;
     }
 }
-
-
-/* Location:              C:\Users\USER\Desktop\jar\Stock_manager4694646969736841869\Stock_manager-war.war!\WEB-INF\classes\converters\MoisConverter.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */

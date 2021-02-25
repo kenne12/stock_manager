@@ -23,9 +23,9 @@
                     <h:panelGrid columns="3" columnClasses="column">
 
                         <p:outputLabel value="#{langue.utilisateurs}" for="user" />
-                        <p:selectOneMenu value="#{privilegeController.utilisateur.idutilisateur}" id="user" filter="true" required="true" requiredMessage="#{langue.valeur_obligatoire}">
+                        <p:selectOneMenu value="#{privilegeController.utilisateur.idutilisateur}" id="user" filter="true" filterMatchMode="contains" required="true" requiredMessage="#{langue.valeur_obligatoire}">
                             <f:selectItem itemLabel="#{langue.choisir}" itemValue=""/>
-                            <f:selectItems value="#{privilegeController.utilisateurs}" var="item" itemLabel="#{item.nom} #{item.prenom}" itemValue="#{item.idutilisateur}"/> 
+                            <f:selectItems value="#{privilegeController.utilisateurs}" var="item" itemLabel="#{item.login}" itemValue="#{item.idutilisateur}"/> 
                             <p:ajax update="access,:AccesListerForm:growl" listener="#{privilegeController.handleUserChange()}"/>
                         </p:selectOneMenu>                        
                         <p:message for="user" id="msg_user" />

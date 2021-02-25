@@ -12,38 +12,38 @@ import sessions.FournisseurFacadeLocal;
 import utils.JsfUtil;
 
 @FacesConverter("fournisseurConverter")
-public class FournisseurConverter
-        implements Converter {
+public class FournisseurConverter implements Converter {
 
     @EJB
     private FournisseurFacadeLocal ejbFacade;
 
+    @Override
     public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
-        /* 22 */ if (value == null || value.length() == 0 || JsfUtil.isDummySelectItem(component, value)) {
-            /* 23 */ return null;
+        if (value == null || value.length() == 0 || JsfUtil.isDummySelectItem(component, value)) {
+            return null;
         }
-        /* 25 */ return this.ejbFacade.find(getKey(value));
+        return this.ejbFacade.find(getKey(value));
     }
 
     Integer getKey(String value) {
-        /* 30 */ Integer key = Integer.valueOf(value);
-        /* 31 */ return key;
+        Integer key = Integer.valueOf(value);
+        return key;
     }
 
     String getStringKey(Integer value) {
-        /* 35 */ return "" + value;
+        return "" + value;
     }
 
+    @Override
     public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
-        /* 40 */ if (object == null || (object instanceof String && ((String) object)
-                /* 41 */.length() == 0)) {
-            /* 42 */ return null;
+        if (object == null || (object instanceof String && ((String) object) .length() == 0)) {
+            return null;
         }
-        /* 44 */ if (object instanceof Fournisseur) {
-            /* 45 */ Fournisseur o = (Fournisseur) object;
-            /* 46 */ return getStringKey(o.getIdfournisseur());
+        if (object instanceof Fournisseur) {
+            Fournisseur f = (Fournisseur) object;
+            return getStringKey(f.getIdfournisseur());
         }
-        /* 48 */ Logger.getLogger(getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Fournisseur.class.getName()});
-        /* 49 */ return null;
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Fournisseur.class.getName()});
+        return null;
     }
 }

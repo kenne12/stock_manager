@@ -36,30 +36,26 @@ public class AnneeFacade extends AbstractFacade<Annee> implements AnneeFacadeLoc
 
     @Override
     public List<Annee> findByEtat(boolean etat) throws Exception {
-        List<Annee> annees = null;
         Query query = this.em.createQuery("SELECT a FROM Annee a WHERE a.etat=:etat ORDER BY a.nom");
         query.setParameter("etat", (etat));
-        annees = query.getResultList();
-        return annees;
+        return query.getResultList();
     }
 
     @Override
     public List<Annee> findByRange() {
-        List<Annee> annees = null;
         Query query = this.em.createQuery("SELECT a FROM Annee a  ORDER BY a.nom");
-        annees = query.getResultList();
-        return annees;
+        return query.getResultList();
     }
 
     @Override
     public Annee findByCode(String nom) {
-        List<Annee> annees = null;
+
         Query query = this.em.createQuery("SELECT a FROM Annee a WHERE a.nom=:nom");
         query.setParameter("nom", nom);
-        annees = query.getResultList();
-        if (annees.isEmpty()) {
-            return null;
+        List<Annee> annees = query.getResultList();
+        if (!annees.isEmpty()) {
+            return annees.get(0);
         }
-        return annees.get(0);
+        return null;
     }
 }

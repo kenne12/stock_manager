@@ -337,21 +337,20 @@ public class CommandeClientController
 
     public void print() {
         try {
-            /* 355 */ if (!Utilitaires.isAccess(Long.valueOf(51L))) {
-                /* 356 */ notifyError("acces_refuse");
-                /* 357 */ this.commandeClient = null;
-
+            if (!Utilitaires.isAccess(51L)) {
+                notifyError("acces_refuse");
+                this.commandeClient = null;
                 return;
             }
-            /* 361 */ if (this.commandeClient != null) {
-                /* 362 */ this.commandeClient.setLigneCommandeClientList(this.ligneCommandeClientFacadeLocal.findByCommande(this.commandeClient.getIdCommandeClient()));
-                /* 363 */ this.fileName = PrintUtils.printBonCommandeClient(this.commandeClient, SessionMBean.getParametrage());
-                /* 364 */ RequestContext.getCurrentInstance().execute("PF('FactureImprimerDialog').show()");
+            if (this.commandeClient != null) {
+                this.commandeClient.setLigneCommandeClientList(this.ligneCommandeClientFacadeLocal.findByCommande(this.commandeClient.getIdCommandeClient()));
+                this.fileName = PrintUtils.printBonCommandeClient(this.commandeClient, SessionMBean.getParametrage());
+                RequestContext.getCurrentInstance().execute("PF('FactureImprimerDialog').show()");
             } else {
-                /* 366 */ notifyError("not_row_selected");
+                notifyError("not_row_selected");
             }
-            /* 368 */        } catch (Exception e) {
-            /* 369 */ notifyFail(e);
+        } catch (Exception e) {
+            notifyFail(e);
         }
     }
 

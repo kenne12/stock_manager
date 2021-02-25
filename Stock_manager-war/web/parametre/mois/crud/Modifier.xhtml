@@ -27,11 +27,11 @@
                         <p:message for="nom"/>
                         
                         <p:outputLabel value="#{langue.dateDebut}" for="date_debut" />
-                        <p:calendar pattern="dd/MM/yyyy" id="date_debut" value="#{moisCtrl.anneeMois.dateDebut}" navigator="true" required="true" requiredMessage="#{langue.valeur_obligatoire}"/>
+                        <p:calendar mindate="#{moisCtrl.anneeMois.idannee.dateDebut}" maxdate="#{moisCtrl.anneeMois.idannee.dateFin}" pattern="dd/MM/yyyy" id="date_debut" value="#{moisCtrl.anneeMois.dateDebut}" navigator="true" required="true" requiredMessage="#{langue.valeur_obligatoire}"/>
                         <p:message for="date_debut"/>
                         
                         <p:outputLabel value="#{langue.dateFin}" for="date_fin" />
-                        <p:calendar pattern="dd/MM/yyyy" id="date_fin" value="#{moisCtrl.anneeMois.dateFin}" navigator="true" required="true" requiredMessage="#{langue.valeur_obligatoire}"/>
+                        <p:calendar mindate="#{moisCtrl.anneeMois.idannee.dateDebut}" maxdate="#{moisCtrl.anneeMois.idannee.dateFin}" pattern="dd/MM/yyyy" id="date_fin" value="#{moisCtrl.anneeMois.dateFin}" navigator="true" required="true" requiredMessage="#{langue.valeur_obligatoire}"/>
                         <p:message for="date_fin"/>
 
                         <p:outputLabel value="#{langue.etat}" for="etat" />

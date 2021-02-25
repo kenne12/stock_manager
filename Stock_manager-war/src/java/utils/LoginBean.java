@@ -142,14 +142,14 @@ public class LoginBean
     }
 
     private void filterDate(Date date) {
-        /* 161 */ for (AnneeMois a : this.anneeMoises) {
+        for (AnneeMois a : this.anneeMoises) {
             try {
-                /* 163 */ if ((a.getDateDebut().equals(date) || a.getDateDebut().before(date)) && (a.getDateFin().equals(date) || a.getDateFin().after(date))) {
-                    /* 164 */ this.anneeMois = a;
-                    /* 165 */ System.err.println("retouvé");
+                if ((a.getDateDebut().equals(date) || a.getDateDebut().before(date)) && (a.getDateFin().equals(date) || a.getDateFin().after(date))) {
+                    this.anneeMois = a;
+                    System.err.println("retouvé");
                     break;
                 }
-                /* 168 */            } catch (Exception exception) {
+            } catch (Exception exception) {
             }
         }
     }
@@ -212,7 +212,6 @@ public class LoginBean
                                 Files.copy(file2, file1);
                             }
                         }
-
                         this.showSessionPanel = false;
                     } else {
                         JsfUtil.addErrorMessage("Choisir une date valable dans le mois choisi");
@@ -269,12 +268,12 @@ public class LoginBean
         Utilisateur user = SessionMBean.getUserAccount();
         Utilitaires.saveOperation(this.mouchardFacadeLocal, "Déconnexion", user);
         try {
-            /* 287 */ FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-            /* 288 */ FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-            /* 289 */ String sc = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+            FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+            FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+            String sc = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
 
-            /* 291 */ UtilitaireSession.getInstance().setuser(null);
-            /* 292 */ FacesContext.getCurrentInstance().getExternalContext().redirect(sc + "/login.html");
+            UtilitaireSession.getInstance().setuser(null);
+            FacesContext.getCurrentInstance().getExternalContext().redirect(sc + "/login.html");
         } catch (IOException ex) {
             Logger.getLogger(utils.LoginBean.class.getName()).log(Level.SEVERE, (String) null, ex);
         }
@@ -282,11 +281,11 @@ public class LoginBean
 
     public void change_session() {
         try {
-            /* 302 */ this.showSessionPanel = true;
-            /* 303 */ String sc = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
-            /* 304 */ FacesContext.getCurrentInstance().getExternalContext().redirect(sc + "/index.html?faces-redirect=true");
-            /* 305 */        } catch (IOException ex) {
-            /* 306 */ Logger.getLogger(utils.LoginBean.class.getName()).log(Level.SEVERE, (String) null, ex);
+            this.showSessionPanel = true;
+            String sc = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+            FacesContext.getCurrentInstance().getExternalContext().redirect(sc + "/index.html?faces-redirect=true");
+        } catch (IOException ex) {
+            Logger.getLogger(utils.LoginBean.class.getName()).log(Level.SEVERE, (String) null, ex);
         }
     }
 
@@ -324,8 +323,8 @@ public class LoginBean
     }
 
     public Utilisateur getUserconnected() {
-        /* 345 */ this.utilisateurConnected = UtilitaireSession.getInstance().getuser();
-        /* 346 */ String sc = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+        this.utilisateurConnected = UtilitaireSession.getInstance().getuser();
+        String sc = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
         if (this.utilisateurConnected == null) {
             try {
                 FacesContext.getCurrentInstance().getExternalContext().redirect(sc + "/login.html");
@@ -338,30 +337,30 @@ public class LoginBean
     }
 
     public void setPriv() {
-        /* 359 */ watcher();
+        watcher();
     }
 
     public static void watcher() {
         try {
-            /* 364 */ if (!FacesContext.getCurrentInstance().getExternalContext().getSessionMap().containsKey("compte")) {
-                /* 365 */ String sc = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
-                /* 366 */ FacesContext.getCurrentInstance().getExternalContext().redirect(sc + "/login.html");
+            if (!FacesContext.getCurrentInstance().getExternalContext().getSessionMap().containsKey("compte")) {
+                String sc = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+                FacesContext.getCurrentInstance().getExternalContext().redirect(sc + "/login.html");
             }
-            /* 368 */        } catch (Exception e) {
-            /* 369 */ e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public void updateMois() {
         try {
-            /* 375 */ if (this.annee.getIdannee() == 0) {
-                /* 376 */ JsfUtil.addErrorMessage("Selectionner une année");
+            if (this.annee.getIdannee() == 0) {
+                JsfUtil.addErrorMessage("Selectionner une année");
             } else {
-                /* 378 */ this.anneeMoises = this.anneeMoisFacadeLocal.findByAnnee(this.annee);
+                this.anneeMoises = this.anneeMoisFacadeLocal.findByAnnee(this.annee);
             }
-            /* 380 */        } catch (Exception e) {
-            /* 381 */ e.printStackTrace();
-            /* 382 */ JsfUtil.addErrorMessage("Echec");
+        } catch (Exception e) {
+            e.printStackTrace();
+            JsfUtil.addErrorMessage("Echec");
         }
     }
 

@@ -8,7 +8,4 @@ public interface MoisInterfaceCtrl {
 
     void supprimer();
 
-    void imprimerPrivilegePdf();
-
-    void imprimerPrivilegeHtml();
 }
